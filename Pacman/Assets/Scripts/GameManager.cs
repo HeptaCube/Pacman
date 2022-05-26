@@ -9,7 +9,11 @@ public class GameManager : MonoBehaviour
     [Header("Slots to join Object")]
     public Ghost[] ghosts;
     public Pacman pacman;
+
+    // 아래 foreach 문에 사용됨.
     public Transform pellets;
+
+    public int ghostMultiplier { get; private set; } = 1;
 
     // 에디터에서 설정은 불가능하지만 (   ) 할수 있는 public 변수 생성.
     public int score { get; private set; }
@@ -42,6 +46,7 @@ public class GameManager : MonoBehaviour
     }
 
     private void NewRound()  {
+        // 질문할거
         // 스테이지에 있는 알맹이를 다 활성화시킨다.
         foreach (Transform pellet in this.pellets)  {
             pellet.gameObject.SetActive(true);
@@ -52,6 +57,7 @@ public class GameManager : MonoBehaviour
 
     private void ResetState()
     {
+        ResetGhostMultiplier();
         // 스테이지에 있는 유령들을 다 활성화시킨다.
         for (int i = 0; i < this.ghosts.Length; i++)  {
         this.ghosts[i].gameObject.SetActive(true);
@@ -82,9 +88,12 @@ public class GameManager : MonoBehaviour
         this.lives = lives;
     }
     
+    // 귀신 몬스터를 플레이어가 먹으면 점수 상승 단위가 올라감.
     public void GhostEaten(Ghost ghost)
     {
-        SetScore(this.score + ghost.points);
+        int points = ghost.points * this.ghostMultiplier;
+        SetScore(this.score + points);
+        this.ghostMultiplier++;
     }
 
     public void PacmanEaten()
@@ -93,11 +102,54 @@ public class GameManager : MonoBehaviour
 
         SetLives(this.lives - 1);
 
+        // 생명이 0보다 크다면 3.0(float) 초 후에 ResetState()를 활성화함.
         if (this.lives > 0) {
             Invoke(nameof(ResetState), 3.0f);
         }
         else  {
             GameOver();
         }
+    }
+
+    // 알맹이를 먹을 때 알맹이가 사라지게 하고 점수를 더함.
+    public void PelletEaten(Pellet pellet)
+    {
+        pellet.gameObject.SetActive(false);
+        SetScore(this.score + pellet.points);
+
+        // 만약 남은 알맹이가 없다면 새로운 라운드를 시작함.
+        if(!HasRemainingPellets())
+        {
+            this.pacman.gameObject.SetActive(false);
+            Invoke(nameof(NewRound), 3.0f);
+        }
+    }
+
+    public void PowerPelletEaten(PowerPellet powerpellet)
+    {
+        // TODO : changing ghost state.
+        PelletEaten(powerpellet);
+        CancelInvoke();
+        Invoke(nameof(ghostMultiplier), powerpellet.duration);
+    }
+
+    // 남은 알맹이가 있다면 true를, 그렇지 않다면 flase를 반환하는 메서드.
+    // 질문 있는 부분.
+    private bool HasRemainingPellets()
+    {
+        foreach (Transform pellet in this.pellets)
+        {
+            if (pellet.gameObject.activeSelf)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // 파워 알맹이 효과가 끝나면 ghostMultiplier를 1로 되돌린다.
+    private void ResetGhostMultiplier()
+    {
+        this.ghostMultiplier = 1;
     }
 }

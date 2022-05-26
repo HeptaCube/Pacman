@@ -12,7 +12,8 @@ public class Movement : MonoBehaviour
     // new 키워드로 유니티에서 제공하는 잘 안쓰는 rigidbody 변수 이름을 덮어씌울수 있다. (오류가 안뜸!!)
     public new Rigidbody2D rigidbody { get; private set; }
     public Vector2 direction { get; private set; }
-    // 
+
+    // 다음 방향과 시작 방향을 지정할 수 있다.
     public Vector2 nextDirection { get; private set; }
     public Vector3 startingPosition { get; private set; }
 
@@ -22,11 +23,13 @@ public class Movement : MonoBehaviour
         this.startingPosition = this.transform.position;
     }
 
+    // 시작할 때 상태를 리셋해줌.
     private void Start()
     {
         ResetState();
     }
 
+    // 상태 리셋.
     public void ResetState()
     {
         this.speedMultiplier = 1.0f;
@@ -37,6 +40,7 @@ public class Movement : MonoBehaviour
         this.enabled = true;
     }
 
+    // 매 프레임마다 방향을 지정해준 방향으로 이동함.
     private void Update() {
         if (this.nextDirection != Vector2.zero)
         {
@@ -52,6 +56,7 @@ public class Movement : MonoBehaviour
         this.rigidbody.MovePosition(position + translation);
     }
 
+    // 이동에 관여하는 메서드.
     public void SetDirection(Vector2 direction, bool forced = false)
     {
         if (forced || !Occupied(direction))
@@ -67,14 +72,16 @@ public class Movement : MonoBehaviour
         }
     }
 
+    // 앞이 블럭으로 막혀 있는 경우 (    )를 리턴함.
     public bool Occupied(Vector2 direction)
     {
-        RaycastHit2D hit = Physics2D.BoxCast(this.transform.position, Vector2.one * 0.7f, 0.0f, direction, 1.5f, this.obstacleLayer);
+        RaycastHit2D hit = Physics2D.BoxCast(this.transform.position, Vector2.one * 0.7f,
+        0.0f, direction, 1.5f, this.obstacleLayer);
 
 
         // void에서는 돌려주는 값이 없기 떄문에 return이 종료를 의미하지만
         // 돌려줄 값이 있다면 그렇지 않다.
+        // 추신 : return hit.collider != null; 로 써도 된다.
         return hit.collider;
-        // return hit.collider != null; 로 써도 된다.
     }
 }
