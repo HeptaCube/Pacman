@@ -57,6 +57,7 @@ public class Movement : MonoBehaviour
     }
 
     // 이동에 관여하는 메서드.
+    // forced 라는 bool 형 데이터가 참이거나, 앞에 블럭이 있지 않은 경우 if문이 실행된다.
     public void SetDirection(Vector2 direction, bool forced = false)
     {
         if (forced || !Occupied(direction))
@@ -72,7 +73,7 @@ public class Movement : MonoBehaviour
         }
     }
 
-    // 앞이 블럭으로 막혀 있는 경우 (    )를 리턴함.
+    // 앞이 블럭으로 막혀 있는 경우 true를 리턴함.
     public bool Occupied(Vector2 direction)
     {
         RaycastHit2D hit = Physics2D.BoxCast(this.transform.position, Vector2.one * 0.7f,
