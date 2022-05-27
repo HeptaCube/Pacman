@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public Pacman pacman;
 
     // 아래 foreach 문에 사용됨.
-    public Transform pellets;
+    public Transform pellet;
 
     public int ghostMultiplier { get; private set; } = 1;
 
@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
     private void NewRound()  {
         // 질문할거
         // 스테이지에 있는 알맹이를 다 활성화시킨다.
-        foreach (Transform pellet in this.pellets)  {
+        foreach (Transform pellet in this.pellet)  {
             pellet.gameObject.SetActive(true);
         }
 
@@ -127,7 +127,11 @@ public class GameManager : MonoBehaviour
 
     public void PowerPelletEaten(PowerPellet powerpellet)
     {
-        // TODO : changing ghost state.
+        // 파워 알맹이를 먹었을 때, ????????
+        for (int i = 0; i < this.ghosts.Length; i++)
+        {
+            this.ghosts[i].frightened.Enabled(powerpellet.duration);
+        }
         PelletEaten(powerpellet);
         CancelInvoke(nameof(ResetGhostMultiplier));
         Invoke(nameof(ghostMultiplier), powerpellet.duration);
@@ -138,7 +142,7 @@ public class GameManager : MonoBehaviour
     // 참고 : https://docs.unity3d.com/ScriptReference/Transform.html
     private bool HasRemainingPellets()
     {
-        foreach (Transform pellet in this.pellets)
+        foreach (Transform pellet in this.pellet)
         {
             if (pellet.gameObject.activeSelf)
             {

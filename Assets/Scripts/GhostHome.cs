@@ -7,16 +7,30 @@ public class GhostHome : GhostBehavior
     public Transform inside;
     public Transform outside;
 
-    private void OnDisable() {
+    private void OnEnable()
+    {
+
+        StopAllCoroutines();
+    }
+
+
+    private void OnDisable()
+    {
+        if (this.gameObject.activeSelf)
         {
             StartCoroutine(ExitTransition());
-            // ExitTransition(); 과 차이가 뭘까요?
+            // ExitTransition(); 과 같이 단 한번의 호출로 코루틴의 기능을 구현할 수 없다.
+            // StartCoroutine 함수로 유니티에 해당 이뉴머블을 등록해주면 유니티가 매 프레임마다 자동으로
+            // 실행시켜 주는 구조이다. 고로 그냥 호출하는 것과 차이가 있다.
         }
     }
 
-    private void OnEnable()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        StopAllCoroutines();
+        if (this.enabled && collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+        {
+            this.ghost.movement.SetDirection(-this.ghost.movement.direction);
+        }
     }
 
     // Coroutine 메서드.
@@ -30,8 +44,8 @@ public class GhostHome : GhostBehavior
         // 현재 포지션을 position 변수로 설정함.
         Vector3 position = this.transform.position;
 
-        // "집과 집 밖을 전환하는 시간을 나타낸 변수"
-        // "시간이 얼마나 흘렀는지 알기 위해 사용할 변수"
+        // "집과 집 밖을 전환하는 시간을 나타낸 변수" (최대 시간)
+        // "시간이 얼마나 흘렀는지 알기 위해 사용할 변수" (경과 시간)
         float duration = 0.5f;
         float elapsed = 0.0f;
 
@@ -43,11 +57,12 @@ public class GhostHome : GhostBehavior
             // t는 0~1 사이로 고정됨.
             // 참고 자료 : https://artiper.tistory.com/110
             // * t는 0.1, 0.2 ... 0.9 순서로 변화함.
+            // LerpUnclamped 으로 Clamp를 할수도 있으나 Lerp 함수의 경우에는 기본적으로 Clamp가 돼 있음.
             Vector3 newPosition = Vector3.Lerp(position, this.inside.position, elapsed / duration);
             newPosition.z = position.z;
 
             // 유령의 포지션을 위에서 생성한 포지션으로 바꿔치기함.
-            this.ghost.transform.position = position;
+            this.ghost.transform.position = newPosition;
 
             elapsed += Time.deltaTime;
 
@@ -61,12 +76,11 @@ public class GhostHome : GhostBehavior
 
         while (elapsed < duration)
         {
-            Vector3 newPosition = Vector3.Lerp(position, outside.position, elapsed / duration);
+            Vector3 newPosition = Vector3.Lerp(this.inside.position, this.outside.position, elapsed / duration);
             newPosition.z = position.z;
-            this.ghost.transform.position = position;
+            this.ghost.transform.position = newPosition;
             elapsed += Time.deltaTime;
             yield return null;
-            //elapsed 가 duration보다 많아질 경우 while 문이 멈춤.
         }
 
         this.ghost.movement.SetDirection
@@ -75,3 +89,4 @@ public class GhostHome : GhostBehavior
         this.ghost.movement.enabled = true;
     }
 }
+

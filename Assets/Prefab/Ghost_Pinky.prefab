@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2659109560247162983, guid: 39cb54768089a18438e58f1a45803d5b, type: 3}
+      propertyPath: duration
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 4056477842664971252, guid: 39cb54768089a18438e58f1a45803d5b, type: 3}
       propertyPath: m_Color.b
       value: 1
@@ -19,6 +23,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.97017604
       objectReference: {fileID: 0}
+    - target: {fileID: 4056477843412805289, guid: 39cb54768089a18438e58f1a45803d5b, type: 3}
+      propertyPath: initialBehavior
+      value: 
+      objectReference: {fileID: 8536509715022727407}
     - target: {fileID: 4056477843412805290, guid: 39cb54768089a18438e58f1a45803d5b, type: 3}
       propertyPath: initialDirection.y
       value: -1
@@ -71,5 +79,28 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4536132389384614593, guid: 39cb54768089a18438e58f1a45803d5b, type: 3}
+      propertyPath: duration
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431279657871997920, guid: 39cb54768089a18438e58f1a45803d5b, type: 3}
+      propertyPath: duration
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8622004639645130550, guid: 39cb54768089a18438e58f1a45803d5b, type: 3}
+      propertyPath: duration
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 39cb54768089a18438e58f1a45803d5b, type: 3}
+--- !u!114 &8536509715022727407 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4536132389384614593, guid: 39cb54768089a18438e58f1a45803d5b, type: 3}
+  m_PrefabInstance: {fileID: 5225391646584093230}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3541b93f25d525419e08508505afd4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
