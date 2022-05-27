@@ -40,4 +40,10 @@ public class Pacman : MonoBehaviour
         // rotation은 보통 quaternion값을 가진다.
         this.transform.rotation = Quaternion.AngleAxis(angle * Mathf.Rad2Deg, Vector3.forward);
     }
+    
+    public void ResetState()
+    {
+        this.gameObject.SetActive(true);
+        this.movement.ResetState();
+    }
 }

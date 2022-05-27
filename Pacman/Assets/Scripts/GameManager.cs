@@ -60,11 +60,11 @@ public class GameManager : MonoBehaviour
         ResetGhostMultiplier();
         // 스테이지에 있는 유령들을 다 활성화시킨다.
         for (int i = 0; i < this.ghosts.Length; i++)  {
-        this.ghosts[i].gameObject.SetActive(true);
+        this.ghosts[i].ResetState();
         }
 
         // 플레이어 오브젝트를 활성화시킨다.
-        this.pacman.gameObject.SetActive(true);
+        this.pacman.ResetState();
     }
     
     private void GameOver()
@@ -74,9 +74,9 @@ public class GameManager : MonoBehaviour
         this.ghosts[i].gameObject.SetActive(false);
         }
         
-        // 플레이어 오브젝트를 활성화시킨다.
-        this.pacman.gameObject.SetActive(true);
-
+        // 플레이어 오브젝트를 비활성화시킨다.
+        this.pacman.gameObject.SetActive(false);
+        
         // 후에 UI를 표시할 예정.
     }
 
@@ -129,12 +129,13 @@ public class GameManager : MonoBehaviour
     {
         // TODO : changing ghost state.
         PelletEaten(powerpellet);
-        CancelInvoke();
+        CancelInvoke(nameof(ResetGhostMultiplier));
         Invoke(nameof(ghostMultiplier), powerpellet.duration);
     }
 
     // 남은 알맹이가 있다면 true를, 그렇지 않다면 flase를 반환하는 메서드.
-    // 질문 있는 부분.
+    // pellet 오브젝트의 Transform(클래스) 의 gameObject(메서드)에 있는 activeSelf 변수 값을 확인함.
+    // 참고 : https://docs.unity3d.com/ScriptReference/Transform.html
     private bool HasRemainingPellets()
     {
         foreach (Transform pellet in this.pellets)
