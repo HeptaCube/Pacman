@@ -9,7 +9,6 @@ public class GhostHome : GhostBehavior
 
     private void OnEnable()
     {
-
         StopAllCoroutines();
     }
 
